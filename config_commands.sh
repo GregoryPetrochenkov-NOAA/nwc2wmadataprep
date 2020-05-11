@@ -2,17 +2,18 @@ username=$1
 password=$2
 host=$3
 db=$4
-owner=$5
-ownerpass=$6
-check=$7
+schema=$5
+owner=$6
+ownerpass=$7
+check=$8
 
 if [ -z "$ownerpass" ]; then
-     echo "You must pass in six variables, admin username, password, host, database name, database owner, and a database owner password."
+     echo "You must pass in seven variables, admin username, password, host, database name, schema, database owner, and a database owner password."
      exit
 fi
 
 if [ -n "$check" ]; then
-    echo "You must pass in six variables, admin username, password, host, database name, database owner, and a database owner password."
+    echo "You must pass in seven variables, admin username, password, host, database name, schema, database owner, and a database owner password."
     exit
 fi
 if [-e NHDPlusNationalData/NHDPlusV21_National_Seamless_Flattened_Lower48.gdb ]; then
@@ -85,23 +86,32 @@ psql -c "UPDATE huc12 SET the_geom = ST_Multi(ST_Intersection(huc12.the_geom, un
 psql -c "DROP TABLE union_county;" postgresql://$owner:$ownerpass@$host:5432/$db
 psql -c "DELETE FROM huc12 WHERE states = 'CAN';" postgresql://$owner:$ownerpass@$host:5432/$db
 
-echo Create pgdumps
-pg_dump -O  -t huc08 postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc08.pgdump"
+echo Create pgdumps and convert all schema names to public so ingestion jenkins file can convert to relevant schmea name
+pg_dump -O -a -t $schema.gagesII postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/gagesii.pgdump"
+sed -i 's/'$schema'.gagesii/public.gagesii/g' ./dumps/gagesii.pgdump
 
-pg_dump -O  -t huc12all postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12all.pgdump"
+pg_dump -O -a -t $schema.huc08 postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc08.pgdump"
+sed -i 's/'$schema'.huc08/public.huc08/g' ./dumps/huc08.pgdump
 
-pg_dump -O  -t huc12 postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12.pgdump"
+pg_dump -O -a -t $schema.huc12all postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12all.pgdump"
+sed -i 's/'$schema'.huc12all/public.huc12all/g' ./dumps/huc12all.pgdump
 
-pg_dump -O  -t huc12agg postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12agg.pgdump"
+pg_dump -O -a -t $schema.huc12 postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12.pgdump"
+sed -i 's/'$schema'.huc12/public.huc12/g' ./dumps/huc12.pgdump
 
-pg_dump -O  -t nhdflowline_network postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdflowline_network.pgdump"
+pg_dump -O -a -t $schema.huc12agg postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/huc12agg.pgdump"
+sed -i 's/'$schema'.huc12agg/public.huc12agg/g' ./dumps/huc12agg.pgdump
 
-pg_dump -O  -t nhdarea postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdarea.pgdump"
+pg_dump -O -a -t $schema.nhdflowline_network postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdflowline_network.pgdump"
+sed -i 's/'$schema'.nhdflowline_network/public.nhdflowline_network/g' ./dumps/nhdflowline_network.pgdump
 
-pg_dump -O  -t catchmentsp postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/catchmentsp.pgdump"
+pg_dump -O -a -t $schema.nhdarea postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdarea.pgdump"
+sed -i 's/'$schema'.nhdarea/public.nhdarea/g' ./dumps/nhdarea.pgdump
 
-pg_dump -O  -t nhdwaterbody postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdwaterbody.pgdump"
+pg_dump -O -a -t $schema.catchmentsp postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/catchmentsp.pgdump"
+sed -i 's/'$schema'.catchmentsp/public.catchmentsp/g' ./dumps/catchmentsp.pgdump
 
-pg_dump -O  -t gagesII postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/gagesII.pgdump"
+pg_dump -O -a -t $schema.nhdwaterbody postgresql://$owner:$ownerpass@$host:5432/$db > "dumps/nhdwaterbody.pgdump"
+sed -i 's/'$schema'.nhdwaterbody/public.nhdwaterbody/g' ./dumps/nhdwaterbody.pgdump
 
 for file in dumps/*.pgdump; do gzip $file; done;
