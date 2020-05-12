@@ -34,7 +34,7 @@ pipeline {
       steps {
         script {
           def wqpSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/WQP-EXTERNAL-$DEPLOY_STAGE" --query "Parameter.Value" --with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
-          def iowGeoSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/IOW-GEOSERVER" --query "Parameter.Value" --no-with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
+          def iowGeoSecretsString = sh(script: '/usr/local/bin/aws secretsmanager get-secret-value --secret-id IOW-GEOSERVER  --region "us-west-2"', returnStdout: true).trim()
           def secretsJson =  readJSON text: secretsString
           env.NWIS_DATABASE_ADDRESS = wqpSecretsString.DATABASE_ADDRESS
           env.NWIS_DATABASE_NAME = wqpSecretsString.DATABASE_NAME
@@ -42,7 +42,7 @@ pipeline {
           env.WMADATA_DB_READ_ONLY_USERNAME = wqpSecretsString.WMADATA_DB_READ_ONLY_USERNAME
           env.WMADATA_DB_READ_ONLY_PASSWORD = wqpSecretsString.WMADATA_DB_READ_ONLY_PASSWORD
           env.POSTGRES_PASSWORD = wqpSecretsString.POSTGRES_PASSWORD
-          env.GEOSERVER_PASSWORD = iowGeoSecretsString.admin
+          env.GEOSERVER_PASSWORD = iowGeoSecretsString.SecretString.admin
           env.GEOSERVER_WORKSPACE = wmadata
           env.GEOSERVER_STORE = wmadata
 
