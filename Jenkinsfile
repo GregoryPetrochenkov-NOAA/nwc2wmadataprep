@@ -34,6 +34,10 @@ pipeline {
       steps {
         script {
           def wqpSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/WQP-EXTERNAL-$DEPLOY_STAGE" --query "Parameter.Value" --with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
+
+          sh '''
+           /usr/local/bin/aws secretsmanager get-secret-value --secret-id IOW-GEOSERVER
+          '''
           def iowGeoSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/IOW-GEOSERVER" --query "Parameter.Value" --with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
           def secretsJson =  readJSON text: secretsString
           env.NWIS_DATABASE_ADDRESS = wqpSecretsString.DATABASE_ADDRESS
