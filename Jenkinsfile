@@ -34,15 +34,16 @@ pipeline {
       steps {
         script {
           def wqpSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/WQP-EXTERNAL-$DEPLOY_STAGE" --query "Parameter.Value" --with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
-          def iowGeoSecretsString = `/usr/local/bin/aws secretsmanager get-secret-value --secret-id IOW-GEOSERVER  --region "us-west-2"`
-          def secretsJson =  readJSON text: secretsString
-          env.NWIS_DATABASE_ADDRESS = wqpSecretsString.DATABASE_ADDRESS
-          env.NWIS_DATABASE_NAME = wqpSecretsString.DATABASE_NAME
-          env.WMADATA_SCHEMA_NAME = wqpSecretsString.WMADATA_SCHEMA_NAME
-          env.WMADATA_DB_READ_ONLY_USERNAME = wqpSecretsString.WMADATA_DB_READ_ONLY_USERNAME
-          env.WMADATA_DB_READ_ONLY_PASSWORD = wqpSecretsString.WMADATA_DB_READ_ONLY_PASSWORD
-          env.POSTGRES_PASSWORD = wqpSecretsString.POSTGRES_PASSWORD
-          env.GEOSERVER_PASSWORD = iowGeoSecretsString.SecretString.admin
+          def iowGeoSecretsString = sh(script: '/usr/local/bin/aws ssm get-parameter --name "/aws/reference/secretsmanager/IOW-GEOSERVER" --query "Parameter.Value" --with-decryption --output text --region "us-west-2"', returnStdout: true).trim()
+          def wqpSecretsJson  =  readJSON text: wqpSecretsString
+          def iowGeoSecretsJson = readJSON text: iowGeoSecretsString
+          env.NWIS_DATABASE_ADDRESS = wqpSecretsJson.DATABASE_ADDRESS
+          env.NWIS_DATABASE_NAME = wqpSecretsJson.DATABASE_NAME
+          env.WMADATA_SCHEMA_NAME = wqpSecretsJson.WMADATA_SCHEMA_NAME
+          env.WMADATA_DB_READ_ONLY_USERNAME = wqpSecretsJson.WMADATA_DB_READ_ONLY_USERNAME
+          env.WMADATA_DB_READ_ONLY_PASSWORD = wqpSecretsJson.WMADATA_DB_READ_ONLY_PASSWORD
+          env.POSTGRES_PASSWORD = wqpSecretsJson.POSTGRES_PASSWORD
+          env.GEOSERVER_PASSWORD = iowGeoSecretsJson.admin
           env.GEOSERVER_WORKSPACE = wmadata
           env.GEOSERVER_STORE = wmadata
 
