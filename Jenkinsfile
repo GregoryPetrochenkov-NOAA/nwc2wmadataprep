@@ -49,10 +49,8 @@ pipeline {
 
           sh '''
             if [ $DEPLOY_STAGE == "TEST" ]; then
-               echo "TEST"
                url="https://labs-beta.waterdata.usgs.gov/geoserver"
             else
-               echo "PROD"
                url="https://labs.waterdata.usgs.gov/geoserver"
             fi
 
@@ -71,50 +69,50 @@ pipeline {
               </connectionParameters>
             </dataStore>' > wmadata_store.xml
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<workspace><name>$GEOSERVER_WORKSPACE</name></workspace>" \
               $url/rest/workspaces
 
-            curl -v -u admin:geoserver -XPOST -T wmadata_store.xml -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -T wmadata_store.xml -H "Content-type: text/xml" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>gagesii</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>gagesii</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>huc08</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>huc12</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>huc12all</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>huc12agg</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>catchmentsp</name><nativeCRS>EPSG:4269</nativeCRS><srs>EEPSG:4269</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>nhdarea</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:4269</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>nhdflowline_network</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:4269</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
-            curl -v -u admin:geoserver -XPOST -H "Content-type: text/xml" \
+            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>nhdwaterbody</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:4269</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
             '''
