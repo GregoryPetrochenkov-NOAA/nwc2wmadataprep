@@ -44,8 +44,8 @@ pipeline {
           env.WMADATA_DB_READ_ONLY_PASSWORD = wqpSecretsJson.WMADATA_DB_READ_ONLY_PASSWORD
           env.POSTGRES_PASSWORD = wqpSecretsJson.POSTGRES_PASSWORD
           env.GEOSERVER_PASSWORD = iowGeoSecretsJson.admin
-          env.GEOSERVER_WORKSPACE = 'wmadata'
-          env.GEOSERVER_STORE = 'wmadata'
+          env.GEOSERVER_WORKSPACE = 'wmaworkspace'
+          env.GEOSERVER_STORE = 'wmadstore'
 
           sh '''
             if [ $DEPLOY_STAGE == "TEST" ]; then
@@ -62,7 +62,7 @@ pipeline {
                 <host>'$NWIS_DATABASE_ADDRESS'</host>
                 <port>5432</port>
                 <database>'$NWIS_DATABASE_NAME'</database>
-                <schema>'WMADATA_SCHEMA_NAME'</schema>
+                <schema>'$WMADATA_SCHEMA_NAME'</schema>
                 <user>'$WMADATA_DB_READ_ONLY_USERNAME'</user>
                 <passwd>'$WMADATA_DB_READ_ONLY_PASSWORD'</passwd>
                 <dbtype>postgis</dbtype>
