@@ -8,7 +8,7 @@ from the authorized or unauthorized use of this information.**
 
 These data feed a geoserver infrastructure available here: https://labs.waterdata.usgs.gov/geoserver/web/
 
-Every effort has been made to automate creation of .pgdump files using the script config_commands.sh  
+Every effort has been made to automate creation of .pgdump files using the script ogr2pgdump.sh  
 
 This repository contains source data and assumes access to a locally running PostGres database and 
 
