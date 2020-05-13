@@ -81,10 +81,6 @@ pipeline {
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
             curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
-              -d "<featureType><name>gagesii</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
-              $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
-
-            curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
               -d "<featureType><name>huc08</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:900913</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
@@ -101,7 +97,7 @@ pipeline {
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
             curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
-              -d "<featureType><name>catchmentsp</name><nativeCRS>EPSG:4269</nativeCRS><srs>EEPSG:4269</srs></featureType>" \
+              -d "<featureType><name>catchmentsp</name><nativeCRS>EPSG:4269</nativeCRS><srs>EPSG:4269</srs></featureType>" \
               $url/rest/workspaces/$GEOSERVER_WORKSPACE/datastores/$GEOSERVER_STORE/featuretypes
 
             curl -v -u admin:$GEOSERVER_PASSWORD -XPOST -H "Content-type: text/xml" \
