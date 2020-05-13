@@ -44,12 +44,12 @@ pipeline {
           env.WMADATA_DB_READ_ONLY_PASSWORD = wqpSecretsJson.WMADATA_DB_READ_ONLY_PASSWORD
           env.POSTGRES_PASSWORD = wqpSecretsJson.POSTGRES_PASSWORD
           env.GEOSERVER_PASSWORD = iowGeoSecretsJson.admin
-          env.GEOSERVER_WORKSPACE = 'wmaworkspace'
-          env.GEOSERVER_STORE = 'wmadstore'
+          env.GEOSERVER_WORKSPACE = 'wmadata'
+          env.GEOSERVER_STORE = 'wmadata'
 
           sh '''
             if [ $DEPLOY_STAGE == "TEST" ]; then
-               url="https://labs-beta.waterdata.usgs.gov/geoserver"
+               url="https://labs-dev.wma.chs.usgs.gov/geoserver"
             else
                url="https://labs.waterdata.usgs.gov/geoserver"
             fi
