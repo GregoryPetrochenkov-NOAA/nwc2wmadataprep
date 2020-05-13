@@ -50,6 +50,8 @@ pipeline {
           sh '''
             if [ $DEPLOY_STAGE == "TEST" ]; then
                url="https://labs-dev.wma.chs.usgs.gov/geoserver"
+            elif [ $DEPLOY_STAGE == "QA" ]; then
+               url="https://labs-beta.waterdata.usgs.gov/geoserver"
             else
                url="https://labs.waterdata.usgs.gov/geoserver"
             fi
