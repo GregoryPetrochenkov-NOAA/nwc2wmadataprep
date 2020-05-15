@@ -1,7 +1,7 @@
 username=$1
 password=$2
 
-for file in ./{dumps,data}/*
+for file in ./dumps/*
  
 do
 test=$(basename $file)
